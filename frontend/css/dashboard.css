@@ -1,0 +1,150 @@
+/* ═══════════════════════════════════════════════
+   DukanPro — Dashboard / Page-specific Styles (Responsive)
+   ═══════════════════════════════════════════════ */
+
+/* ── Billing layout ── desktop two-column ────────────────── */
+.billing-layout { display: flex; gap: 18px; align-items: flex-start; }
+.billing-main   { flex: 1; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.billing-side   { width: 260px; display: flex; flex-direction: column; gap: 14px; flex-shrink: 0; }
+
+.bill-summary-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; flex-wrap: wrap; gap: 4px; }
+.bill-total-row   { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; }
+
+.product-dropdown {
+  display: none; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: var(--r);
+  margin-top: 4px; max-height: 200px; overflow-y: auto;
+  position: absolute; z-index: 50; width: 100%;
+}
+.product-dropdown .pd-item {
+  padding: 8px 12px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border); font-size: 12px;
+  transition: background .1s;
+  min-height: 40px;
+}
+.product-dropdown .pd-item:hover { background: var(--bg4); }
+
+.recent-bill-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 0; border-bottom: 1px solid var(--border);
+  font-size: 11px; gap: 8px;
+}
+.recent-bill-row > * { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Inventory progress ────────────────────────────────────── */
+.inv-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.inv-row > div { min-width: 0; }
+
+/* ── Users grid ───────────────────────────────────────────── */
+.user-card {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 14px;
+  display: flex; align-items: center; gap: 12px;
+  overflow: hidden;
+}
+.user-card .uc-av {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(108,99,255,.15); color: var(--accent2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; flex-shrink: 0;
+}
+.user-card .uc-info { flex: 1; min-width: 0; overflow: hidden; }
+.user-card .uc-info h4 { font-size: 13px; font-weight: 600; }
+.user-card .uc-info p  { font-size: 10px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Report tables ───────────────────────────────────────── */
+.report-table-wrap {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.report-table-wrap table { min-width: 600px; }
+
+/* ── Permission matrix ────────────────────────────────────── */
+.perm-table { width: 100%; min-width: 480px; }
+.perm-table td { padding: 5px 8px; font-size: 12px; text-align: center; }
+.perm-table th { text-align: center; }
+.perm-check { color: var(--green); font-size: 14px; text-align: center; }
+.perm-cross { color: var(--red);   font-size: 14px; text-align: center; }
+
+/* ── Loading spinner ─────────────────────────────────────── */
+.spinner {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 3px solid var(--border2);
+  border-top-color: var(--accent);
+  animation: spin .7s linear infinite;
+  margin: 40px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.page-loading { text-align: center; padding: 60px; color: var(--text3); }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE OVERRIDES for Dashboard / Tablet & Mobile
+   ══════════════════════════════════════════════ */
+
+/* ── Tablet ≤ 1023px ─────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .billing-side { width: 100%; flex-direction: column; }
+
+  .report-table-wrap table { min-width: 500px; }
+  .user-card { padding: 12px; }
+  .user-card .uc-av { width: 38px; height: 38px; font-size: 14px; }
+}
+
+/* ── Mobile ≤ 767px ──────────────────────────────────────── */
+@media (max-width: 767px) {
+  .billing-layout {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .billing-main,
+  .billing-side {
+    width: 100%;
+  }
+  .billing-main { flex-direction: column; }
+
+  /* Bill summary: allow horizontal scroll */
+  .card table, .card .table-wrap table {
+    min-width: 540px;
+  }
+  .card .table-wrap {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    margin-left: -16px; margin-right: -16px;
+    padding-left: 16px; padding-right: 16px;
+  }
+
+  /* Invoice/bill action cell */
+  td[style*="display:flex"] {
+    flex-wrap: wrap; gap: 4px;
+  }
+  td[style*="display:flex"] select.inp {
+    width: 90px !important;
+    font-size: 10px !important;
+    padding: 3px 5px !important;
+  }
+
+  .report-table-wrap table { min-width: 560px; }
+
+  .inv-row { gap: 6px; }
+  .inv-row > div { flex-basis: 100%; }
+  .inv-row > div[style*="flex:3"] { flex-basis: 100%; }
+
+  .perm-table td { padding: 4px 6px; font-size: 11px; }
+  .user-card { padding: 10px 12px; }
+}
+
+/* ── Small Mobile ≤ 480px ────────────────────────────────── */
+@media (max-width: 480px) {
+  .billing-side { gap: 10px; }
+  .card { padding: 12px 14px; }
+  .card .table-wrap {
+    margin-left: -14px; margin-right: -14px;
+    padding-left: 14px; padding-right: 14px;
+  }
+  .billing-layout .form-row { flex-direction: column; gap: 10px; }
+  .billing-layout .form-row .form-group { flex: 1 1 100% !important; }
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DukanPro — Shop Management System</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+</head>
+<body>
+
+  <!-- ═══════════════ AUTH & VERIFY WRAPPER ═══════════════ -->
+  <div id="auth-screen">
+
+    <!-- ══ Login ══════════════════════════════════════ -->
+    <div id="login-page" class="auth-wrap">
+      <div class="auth-bg"></div>
+      <div class="auth-dots"></div>
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="auth-icon">🛒</div>
+          <h1>DukanPro</h1>
+          <p>Professional Shop Management System</p>
+        </div>
+        <div id="login-error" class="auth-error"></div>
+        <div class="form-group">
+          <label>Username or Email</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">👤</span>
+            <input class="inp" id="l-user" placeholder="admin / your email" autocomplete="username">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">🔒</span>
+            <input class="inp" id="l-pass" type="password" placeholder="Enter password" autocomplete="current-password">
+            <button class="eye-btn" onclick="toggleEye('l-pass',this)">👁</button>
+          </div>
+        </div>
+        <button class="btn-auth" id="login-btn" onclick="doLogin()">Sign In →</button>
+        <div class="auth-divider">Quick Demo Login</div>
+        <div class="quick-logins">
+          <button class="quick-btn" onclick="quickLogin('admin','admin123')"><span>👑</span><strong>Admin</strong><small>Full Access</small></button>
+          <button class="quick-btn" onclick="quickLogin('manager','manager123')"><span>💼</span><strong>Manager</strong><small>No Settings</small></button>
+          <button class="quick-btn" onclick="quickLogin('cashier','cashier123')"><span>💰</span><strong>Cashier</strong><small>Billing Only</small></button>
+          <button class="quick-btn" onclick="quickLogin('delivery','delivery123')"><span>🚚</span><strong>Delivery</strong><small>Delivery Only</small></button>
+        </div>
+        <div class="auth-footer">
+          Don't have an account? <a href="#" onclick="showAuth('register')">Register</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Register ═══════════════════════════════════ -->
+    <div id="register-page" class="auth-wrap" style="display:none;">
+      <div class="auth-bg"></div>
+      <div class="auth-dots"></div>
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="auth-icon">✏️</div>
+          <h1>Create Account</h1>
+          <p>Join DukanPro Management System</p>
+        </div>
+        <div id="reg-error" class="auth-error"></div>
+        <div id="reg-success" class="auth-success"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input class="inp" id="r-name" placeholder="Ahmed Ali">
+          </div>
+          <div class="form-group">
+            <label>Username *</label>
+            <input class="inp" id="r-user" placeholder="ahmed01">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input class="inp" id="r-email" type="email" placeholder="ahmed@email.com">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Password * (min 6)</label>
+            <div class="inp-wrap">
+              <input class="inp" id="r-pass" type="password" placeholder="••••••">
+              <button class="eye-btn" onclick="toggleEye('r-pass',this)">👁</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Confirm Password *</label>
+            <input class="inp" id="r-pass2" type="password" placeholder="••••••">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <div class="role-select" id="role-selector">
+            <div class="role-opt selected" onclick="selectRole('cashier',this)"><span>💰</span><strong>Cashier</strong></div>
+            <div class="role-opt" onclick="selectRole('manager',this)"><span>💼</span><strong>Manager</strong></div>
+            <div class="role-opt" onclick="selectRole('delivery',this)"><span>🚚</span><strong>Delivery</strong></div>
+            <div class="role-opt" onclick="selectRole('admin',this)"><span>👑</span><strong>Admin</strong></div>
+          </div>
+        </div>
+        <div class="form-group" id="shop-pass-wrap" style="display:none;">
+          <label>Shop Admin Password *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">🏪</span>
+            <input class="inp" id="r-shop-pass" type="password" placeholder="Required for Admin role">
+          </div>
+          <small style="color:var(--text3);font-size:11px;">Contact your administrator for this password.</small>
+        </div>
+        <button class="btn-auth" id="reg-btn" onclick="doRegister()">Create Account →</button>
+        <div class="auth-footer">
+          Already have an account? <a href="#" onclick="showAuth('login')">Login</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Email Verification (pending / success / expired) ══ -->
+    <div id="verify-screen" style="display:none; min-height:100vh; align-items:center; justify-content:center; padding:40px 16px; position:relative; overflow:hidden;">
+
+      <div id="verify-bg" style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(108,99,255,.15) 0%,transparent 70%);pointer-events:none;"></div>
+      <div id="verify-dots" style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(108,99,255,.09) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;"></div>
+
+      <!-- ── PENDING ────────────────────────────────── -->
+      <div id="verify-card" style="display:none;">
+        <div class="verify-card">
+          <div id="v-icon" class="vc-icon">📧</div>
+          <h2 class="vc-title">Check Your Email</h2>
+          <p id="v-user" class="vc-text">We sent a verification link to your inbox.</p>
+          <p class="vc-text" style="font-size:12px;color:var(--text3);margin-bottom:18px;">If you don't see it, check your spam or junk folder.</p>
+
+          <!-- Spinner (shown while auto-validating token from URL) -->
+          <div id="v-spinner" style="display:none;margin-bottom:18px;">
+            <div class="spinner" style="width:34px;height:34px;border-width:3px;margin:0 auto;"></div>
+          </div>
+
+          <!-- Pending: resend form -->
+          <div id="v-resend-wrap" style="margin:18px 0;">
+            <button class="btn btn-primary" id="v-resend-btn" style="padding:11px 28px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;transition:.15s;">Show Resend Options</button>
+            <p id="v-resend-msg" style="font-size:11px;color:var(--text3);margin-top:12px;display:none;" class="resend-msg"></p>
+          </div>
+          <div id="v-resend-form" style="display:none;margin-top:14px;">
+            <div style="margin-bottom:10px;max-width:320px;margin-left:auto;margin-right:auto;">
+              <input class="inp" id="v-resend-email" type="email" placeholder="Enter your email address" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:9px 14px;font-size:13px;width:100%;outline:none;">
+            </div>
+            <button class="btn btn-primary" id="v-resend-submit" style="padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;">Resend Verification Email</button>
+          </div>
+
+          <div style="margin-top:24px;font-size:12px;color:var(--text3);">
+            <a href="#" onclick="showAuth('login');return false;" style="color:var(--accent2);text-decoration:none;">← Back to Login</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SUCCESS ─────────────────────────────────── -->
+      <div id="card-success" style="display:none;">
+        <div class="verify-card" style="border-color:rgba(34,197,94,.35);">
+          <div class="vc-icon" style="width:70px;height:70px;background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.4);">✅</div>
+          <h2 class="vc-title" style="color:var(--green);">Email Verified!</h2>
+          <p class="vc-text">Your email has been confirmed. You can now log in to your account.</p>
+          <button class="btn btn-primary" onclick="showAuth('login')" style="padding:12px 36px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;transition:.15s;margin-top:8px;">Go to Login →</button>
+        </div>
+      </div>
+
+      <!-- ── EXPIRED / INVALID ────────────────────────── -->
+      <div id="card-expired" style="display:none;">
+        <div class="verify-card" style="border-color:rgba(239,68,68,.3);">
+          <div class="vc-icon" style="width:70px;height:70px;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35);">⏰</div>
+          <h2 class="vc-title" style="color:var(--red);">Link Expired or Invalid</h2>
+          <p id="v-err-msg" class="vc-text">This verification link is no longer valid. Please request a new one below.</p>
+
+          <div id="v-err-resend-wrap" style="margin:18px 0;">
+            <button class="btn btn-ghost" id="v-err-resend-btn" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:var(--r);padding:10px 28px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;">Show Resend Options</button>
+          </div>
+          <div id="v-err-resend-form" style="display:none;margin-top:14px;">
+            <div style="margin-bottom:10px;max-width:320px;margin-left:auto;margin-right:auto;">
+              <input class="inp" id="v-err-resend-email" type="email" placeholder="Enter your email address" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:9px 14px;font-size:13px;width:100%;outline:none;">
+            </div>
+            <button class="btn btn-primary" id="v-err-resend-submit" style="padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;">Send New Email</button>
+            <p id="v-err-msg2" style="font-size:11px;color:var(--text3);margin-top:10px;"></p>
+          </div>
+
+          <div style="margin-top:24px;font-size:12px;color:var(--text3);">
+            <a href="#" onclick="showAuth('login');return false;" style="color:var(--accent2);text-decoration:none;">← Back to Login</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- ═══════════════ /VERIFICATION ═══════════════ -->
+
+  </div>
+
+  <!-- ═══════════════ MAIN APP ═══════════════ -->
+  <div id="main-app" style="display:none;">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🛒</div>
+        <div><h2>DukanPro</h2><span>v2.0 Pro</span></div>
+      </div>
+      <nav class="nav" id="sidebar-nav">
+        <div class="nav-sect">Main</div>
+        <button class="nav-item active" onclick="showPage('billing')" id="nav-billing"><span class="ni">🧾</span> Billing</button>
+        <button class="nav-item" onclick="showPage('orders')"   id="nav-orders">  <span class="ni">📦</span> Orders</button>
+        <button class="nav-item" onclick="showPage('delivery')" id="nav-delivery"><span class="ni">🚚</span> Delivery</button>
+        <div class="nav-sect">Data</div>
+        <button class="nav-item" onclick="showPage('customers')" id="nav-customers"><span class="ni">👥</span> Customers</button>
+        <button class="nav-item" onclick="showPage('products')"  id="nav-products"> <span class="ni">🏷️</span> Products</button>
+        <button class="nav-item" onclick="showPage('inventory')" id="nav-inventory"><span class="ni">📊</span> Inventory</button>
+        <div class="nav-sect">Reports</div>
+        <button class="nav-item" onclick="showPage('reports')" id="nav-reports"><span class="ni">📈</span> Reports</button>
+        <div class="nav-sect admin-sect">Admin</div>
+        <button class="nav-item admin-only" onclick="showPage('users')"       id="nav-users">      <span class="ni">👤</span> Users</button>
+        <button class="nav-item admin-only" onclick="showPage('permissions')" id="nav-permissions"><span class="ni">🔐</span> Permissions</button>
+        <button class="nav-item admin-only" onclick="showPage('settings')"    id="nav-settings">   <span class="ni">⚙️</span> Settings</button>
+      </nav>
+      <div class="sidebar-user">
+        <div class="su-info">
+          <div class="su-avatar" id="su-av">A</div>
+          <div>
+            <div class="su-name" id="su-name">Admin</div>
+            <div class="su-role" id="su-role">Administrator</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
+      </div>
+    </aside>
+
+  <!-- Sidebar Overlay (mobile backdrop) -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main Content -->
+  <div class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+          <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Toggle Menu">
+            <span></span><span></span><span></span>
+          </button>
+          <span id="page-title-bar">🧾 Billing</span>
+        </div>
+        <div class="topbar-right">
+          <span class="badge" id="clock-badge"></span>
+          <span class="role-badge" id="topbar-role-badge">Admin</span>
+        </div>
+      </header>
+
+      <!-- Pages injected by JS -->
+      <div id="page-content"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/billing.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/customers.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/delivery.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/users.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
